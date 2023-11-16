@@ -21,4 +21,6 @@
 
 
 module top();
+    A ringA();
+    B ringB();
 endmodule
