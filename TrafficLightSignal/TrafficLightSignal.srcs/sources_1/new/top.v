@@ -22,19 +22,44 @@
 
 module top(
     input clk,
-    input reset,
+    input rst,
     input [3:0] switchA,
     input [3:0] switchB,
-    output [3:0] GreenLEDs, 
-    output [3:0] YellowLEDs,
-    output [3:0] RedLEDs
+    output [3:0] N_LED,
+    output [3:0] NL_LED,
+    output [3:0] E_LED,
+    output [3:0] EL_LED,
+    output [3:0] S_LED,
+    output [3:0] SL_LED,
+    output [3:0] W_LED,
+    output [3:0] WL_LED
+);
+
+    wire [2:0] ringA_state;
+    wire [2:0] ringB_state;
+
+    ringA A (
+        .clk(clk),
+        .rst(rst),
+        .switch_in(switchA),
+        .state_in(ringB_state),
+        .state_out(ringA_state),
+        .NL_LED(NL_LED),
+        .S_LED(S_LED),
+        .EL_LED(EL_LED),
+        .W_LED(W_LED)
     );
-    
-    reg [3:0] ringA_state;
-    reg [3:0] ringB_state;
-    
-    ringA A(.clk(clk), .rst(reset), .switch_in(switchA), .state_in(ringB_state), .state_out(ringA_state));
-    ringB B(.clk(clk), .rst(reset), .switch_in(switchB), .state_in(ringA_state), .state_out(ringB_state));
-    
-    
+
+    ringB B (
+        .clk(clk),
+        .rst(rst),
+        .switch_in(switchB),
+        .state_in(ringA_state),
+        .state_out(ringB_state),
+        .SL_LED(SL_LED),
+        .N_LED(N_LED),
+        .WL_LED(WL_LED),
+        .E_LED(E_LED)
+    );
+
 endmodule

@@ -67,7 +67,7 @@ module ringB_tb;
         end
 
         // End simulation
-        #10 $finish;
+        #10;
     end
 
 endmodule

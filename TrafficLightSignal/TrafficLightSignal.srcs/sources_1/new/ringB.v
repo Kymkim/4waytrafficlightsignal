@@ -32,50 +32,60 @@ module ringB(
     reg [2:0] present_state, next_state;
     
    
-    localparam SL = 2'b000;
-    localparam SL_wait = 2'b001;
-    localparam N = 2'b010;
-    localparam N_wait = 2'b011;
-    localparam WL = 2'b100;
-    localparam WL_wait = 2'b101;
-    localparam E = 2'b110;
-    localparam E_wait = 2'b111;
+    localparam SL = 3'b000;
+    localparam SL_wait = 3'b001;
+    localparam N = 3'b010;
+    localparam N_wait = 3'b011;
+    localparam WL = 3'b100;
+    localparam WL_wait = 3'b101;
+    localparam E = 3'b110;
+    localparam E_wait = 3'b111;
     
     //Prepares the next state
     always @(present_state, switch_in, state_in) begin
         case(present_state)
-        
             SL:begin
-                if(switch_in == 4'bx1xx) //If south lane switch is on
-                    next_state = SL_wait;
+                casex(switch_in) 
+                    4'bx1xx: next_state = SL_wait;
+                    default: next_state = SL;
+                endcase
             end
             SL_wait:begin
                 next_state = N;
             end
             
             N:begin
-                if(switch_in == 4'bxx1x && state_in == 2'b10) //If east-left turn switch is on and north lane is on
-                    next_state = N_wait;  
+                if (state_in == present_state)
+                    casex(switch_in) 
+                        4'bxx1x: next_state = N_wait;
+                        default: next_state = N;
+                    endcase  
             end
             N_wait:begin
                 next_state = WL;
             end
             
             WL:begin
-                if(switch_in == 4'bxxx1) //If west turn switch is on
-                    next_state = WL_wait;  
+                casex(switch_in) 
+                    4'bxxx1: next_state = WL_wait;
+                    default: next_state = WL;
+                endcase 
             end
             WL_wait:begin
                 next_state = E;
             end
             
             E:begin
-                if(switch_in == 4'b1xxx && state_in == 2'b11) //If north-left turn switch is on and east lane is on
-                    next_state = E_wait;  
+                if (state_in == present_state)
+                    casex(switch_in) 
+                        4'b1xxx: next_state = E_wait;
+                        default: next_state = E;
+                    endcase
             end
             E_wait:begin
                 next_state = SL;
             end
+           
             
         endcase
     end

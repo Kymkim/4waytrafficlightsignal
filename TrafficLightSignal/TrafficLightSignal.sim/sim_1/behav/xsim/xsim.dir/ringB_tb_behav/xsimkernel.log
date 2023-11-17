@@ -1,0 +1,4 @@
+Running: xsim.dir/ringB_tb_behav/xsimk.exe -simmode gui -wdb ringB_tb_behav.wdb -simrunnum 0 -socket 57458
+Design successfully loaded
+Design Loading Memory Usage: 7844 KB (Peak: 7844 KB)
+Design Loading CPU Usage: 61 ms

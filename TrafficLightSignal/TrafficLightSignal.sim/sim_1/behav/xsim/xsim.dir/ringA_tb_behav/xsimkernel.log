@@ -2,3 +2,6 @@ Running: xsim.dir/ringA_tb_behav/xsimk.exe -simmode gui -wdb ringA_tb_behav.wdb 
 Design successfully loaded
 Design Loading Memory Usage: 7192 KB (Peak: 7192 KB)
 Design Loading CPU Usage: 15 ms
+Simulation completed
+Simulation Memory Usage: 7720 KB (Peak: 7720 KB)
+Simulation CPU Usage: 93 ms
