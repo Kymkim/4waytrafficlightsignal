@@ -23,9 +23,10 @@
 module ringB(
         input clk,
         input rst,
-        input [3:0] switch_in, //North-Left Turn, South Lane, East-Left, West Lane
+        input [3:0] switch_in, //South-Left Turn, North Lane, West-Left, East Lane
         input [2:0] state_in,
-        output reg [2:0] state_out
+        output reg [2:0] state_out,
+        output reg [2:0] SL_LED, N_LED, WL_LED, E_LED
     );
     
     reg [2:0] present_state, next_state;
@@ -90,7 +91,62 @@ module ringB(
     //Output Logic
     always @(posedge clk) begin
         state_out = present_state;
+        case(present_state)
         
+            SL:begin
+                SL_LED = 3'b001; 
+                N_LED = 3'b100;
+                WL_LED = 3'b100;
+                E_LED = 3'b100;
+            end
+            
+            SL_wait:begin
+                SL_LED = 3'b010; 
+                N_LED = 3'b100;
+                WL_LED = 3'b100;
+                E_LED = 3'b100;
+            end
+            
+            N:begin
+                SL_LED = 3'b100; 
+                N_LED = 3'b001;
+                WL_LED = 3'b100;
+                E_LED = 3'b100; 
+            end
+            
+            N_wait:begin
+                SL_LED = 3'b100; 
+                N_LED = 3'b010;
+                WL_LED = 3'b100;
+                E_LED = 3'b100;
+            end
+            
+            WL:begin
+                SL_LED = 3'b100; 
+                N_LED = 3'b100;
+                WL_LED = 3'b001;
+                E_LED = 3'b100;  
+            end
+            WL_wait:begin
+                SL_LED = 3'b100; 
+                N_LED = 3'b100;
+                WL_LED = 3'b010;
+                E_LED = 3'b100;
+            end
+            
+            E:begin
+                SL_LED = 3'b100; 
+                N_LED = 3'b100;
+                WL_LED = 3'b100;
+                E_LED = 3'b001; 
+            end
+            E_wait:begin
+                SL_LED = 3'b100; 
+                N_LED = 3'b100;
+                WL_LED = 3'b100;
+                E_LED = 3'b010;
+            end
+       endcase
     end
     
 endmodule

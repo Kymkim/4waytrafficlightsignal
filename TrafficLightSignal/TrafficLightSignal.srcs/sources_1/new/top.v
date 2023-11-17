@@ -20,7 +20,21 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module top();
-    A ringA();
-    B ringB();
+module top(
+    input clk,
+    input reset,
+    input [3:0] switchA,
+    input [3:0] switchB,
+    output [3:0] GreenLEDs, 
+    output [3:0] YellowLEDs,
+    output [3:0] RedLEDs
+    );
+    
+    reg [3:0] ringA_state;
+    reg [3:0] ringB_state;
+    
+    ringA A(.clk(clk), .rst(reset), .switch_in(switchA), .state_in(ringB_state), .state_out(ringA_state));
+    ringB B(.clk(clk), .rst(reset), .switch_in(switchB), .state_in(ringA_state), .state_out(ringB_state));
+    
+    
 endmodule

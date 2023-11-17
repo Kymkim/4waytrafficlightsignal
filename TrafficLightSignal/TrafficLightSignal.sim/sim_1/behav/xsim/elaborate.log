@@ -1,0 +1,33 @@
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: C:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot ringA_tb_behav xil_defaultlib.ringA_tb xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+WARNING: [VRFC 10-8967] first argument of $fatal is invalid; expected 0, 1 or 2 [C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v:56]
+WARNING: [VRFC 10-8967] first argument of $fatal is invalid; expected 0, 1 or 2 [C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v:57]
+WARNING: [VRFC 10-8967] first argument of $fatal is invalid; expected 0, 1 or 2 [C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v:58]
+WARNING: [VRFC 10-8967] first argument of $fatal is invalid; expected 0, 1 or 2 [C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v:59]
+WARNING: [VRFC 10-8967] first argument of $fatal is invalid; expected 0, 1 or 2 [C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v:60]
+WARNING: [VRFC 10-8967] first argument of $fatal is invalid; expected 0, 1 or 2 [C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v:61]
+WARNING: [VRFC 10-8967] first argument of $fatal is invalid; expected 0, 1 or 2 [C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v:62]
+WARNING: [VRFC 10-8967] first argument of $fatal is invalid; expected 0, 1 or 2 [C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v:63]
+WARNING: [VRFC 10-8967] first argument of $fatal is invalid; expected 0, 1 or 2 [C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v:64]
+Completed static elaboration
+INFO: [XSIM 43-4329] Assuming default value 1 for the first arguement of $fatal at Line 56, File C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v
+INFO: [XSIM 43-4329] Assuming default value 1 for the first arguement of $fatal at Line 57, File C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v
+INFO: [XSIM 43-4329] Assuming default value 1 for the first arguement of $fatal at Line 58, File C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v
+INFO: [XSIM 43-4329] Assuming default value 1 for the first arguement of $fatal at Line 59, File C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v
+INFO: [XSIM 43-4329] Assuming default value 1 for the first arguement of $fatal at Line 60, File C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v
+INFO: [XSIM 43-4329] Assuming default value 1 for the first arguement of $fatal at Line 61, File C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v
+INFO: [XSIM 43-4329] Assuming default value 1 for the first arguement of $fatal at Line 62, File C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v
+INFO: [XSIM 43-4329] Assuming default value 1 for the first arguement of $fatal at Line 63, File C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v
+INFO: [XSIM 43-4329] Assuming default value 1 for the first arguement of $fatal at Line 64, File C:/archive/4waytrafficlightsignal/TrafficLightSignal/TrafficLightSignal.srcs/sim_1/new/ringA_tb.v
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.ringA
+Compiling module xil_defaultlib.ringA_tb
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot ringA_tb_behav
