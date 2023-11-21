@@ -21,7 +21,7 @@
 
 
 module ringA(
-        input clk,
+        input en,
         input rst,
         input [3:0] switch_in, //North-Left Turn, South Lane, East-Left, West Lane
         input [2:0] state_in,
@@ -40,14 +40,15 @@ module ringA(
     localparam W = 3'b110;
     localparam W_wait = 3'b111;
     
+
+    
     //Prepares the next state
     always @(present_state, switch_in, state_in) begin
         case(present_state)
-        
             NL:begin
                 casex(switch_in) 
                     4'bx1xx: next_state = NL_wait;
-                    default: next_state = NL;
+                    default: next_state = NL;                 
                 endcase
             end
             
@@ -94,7 +95,7 @@ module ringA(
     end
     
     //Controls state change and reset
-    always @(posedge clk, posedge rst) begin
+    always @(posedge en, posedge rst) begin
         if (rst == 1'b1)
             present_state = NL;
         else
@@ -102,7 +103,7 @@ module ringA(
     end
     
     //Output Logic
-    always @(posedge clk) begin
+    always @(posedge en) begin
         state_out = present_state;
         case(present_state)
             NL:begin

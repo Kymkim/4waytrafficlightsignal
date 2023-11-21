@@ -25,21 +25,23 @@ module top(
     input rst,
     input [3:0] switchA,
     input [3:0] switchB,
-    output [3:0] N_LED,
-    output [3:0] NL_LED,
-    output [3:0] E_LED,
-    output [3:0] EL_LED,
-    output [3:0] S_LED,
-    output [3:0] SL_LED,
-    output [3:0] W_LED,
-    output [3:0] WL_LED
+    output [2:0] N_LED,
+    output [2:0] NL_LED,
+    output [2:0] E_LED,
+    output [2:0] EL_LED,
+    output [2:0] S_LED,
+    output [2:0] SL_LED,
+    output [2:0] W_LED,
+    output [2:0] WL_LED
 );
 
     wire [2:0] ringA_state;
     wire [2:0] ringB_state;
+    reg en;
+    integer timer = 0;
 
     ringA A (
-        .clk(clk),
+        .en(en),
         .rst(rst),
         .switch_in(switchA),
         .state_in(ringB_state),
@@ -51,7 +53,7 @@ module top(
     );
 
     ringB B (
-        .clk(clk),
+        .en(en),
         .rst(rst),
         .switch_in(switchB),
         .state_in(ringA_state),
@@ -61,5 +63,15 @@ module top(
         .WL_LED(WL_LED),
         .E_LED(E_LED)
     );
-
+    
+    always @(posedge clk) begin
+        if (timer >= 100) begin
+            en = 1'b1;
+            timer = 0;
+        end else begin
+            en = 1'b0;
+            timer = timer + 1;
+        end
+    end
+    
 endmodule

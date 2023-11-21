@@ -7,7 +7,7 @@ module ringA_tb;
     parameter SIM_TIME = 1000; // Simulation time in time units
 
     // Signals
-    reg clk;
+    reg en;
     reg rst;
     reg [3:0] switch_in;
     reg [2:0] state_in;
@@ -16,7 +16,7 @@ module ringA_tb;
 
     // Instantiate the module
     ringA uut (
-        .clk(clk),
+        .en(en),
         .rst(rst),
         .switch_in(switch_in),
         .state_in(state_in),
@@ -31,8 +31,8 @@ module ringA_tb;
 
     // Clock generation
     initial begin
-        clk = 0;
-        forever #((CLK_PERIOD / 2)) clk = ~clk;
+        en = 0;
+        forever #((CLK_PERIOD / 2)) en = ~en;
     end
 
     // Test procedure

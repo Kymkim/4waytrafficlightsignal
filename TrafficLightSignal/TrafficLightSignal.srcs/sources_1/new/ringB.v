@@ -21,7 +21,7 @@
 
 
 module ringB(
-        input clk,
+        input en,
         input rst,
         input [3:0] switch_in, //South-Left Turn, North Lane, West-Left, East Lane
         input [2:0] state_in,
@@ -91,7 +91,7 @@ module ringB(
     end
     
     //Controls state change and reset
-    always @(posedge clk, posedge rst) begin
+    always @(posedge en, posedge rst) begin
         if (rst == 1'b1)
             present_state = SL;
         else
@@ -99,7 +99,7 @@ module ringB(
     end
     
     //Output Logic
-    always @(posedge clk) begin
+    always @(posedge en) begin
         state_out = present_state;
         case(present_state)
         
