@@ -30,6 +30,8 @@ module ringA(
     );
     
     reg [2:0] present_state, next_state;
+    integer timer = 0;
+    integer timeout = 0;
     
     localparam NL = 3'b000;
     localparam NL_wait = 3'b001;
@@ -47,48 +49,76 @@ module ringA(
         case(present_state)
             NL:begin
                 casex(switch_in) 
-                    4'bx1xx: next_state = NL_wait;
-                    default: next_state = NL;                 
+                    4'bx1xx: begin 
+                        next_state = NL_wait;
+                        timeout = 500000000;
+                    end
+                    default: begin
+                        next_state = NL;
+                        timeout = 500000000;
+                    end           
                 endcase
             end
             
             NL_wait:begin
                 next_state = S;
+                timeout = 500000000;
             end
             
             S:begin
                 if (state_in == present_state)
                     casex(switch_in) 
-                        4'bxx1x: next_state = S_wait;
-                        default: next_state = S;
+                        4'bxx1x : begin
+                            next_state = S_wait;
+                            timeout = 500000000;
+                        end
+                        default : begin
+                            next_state = S;
+                            timeout = 500000000;
+                        end
                     endcase
             end
             
             S_wait:begin
                 next_state = EL;
+                timeout = 500000000;
             end
             
             EL:begin
                casex(switch_in) 
-                    4'bxxx1: next_state = EL_wait;
-                    default: next_state = NL;
+                    4'bxxx1 : begin
+                        next_state = EL_wait;
+                        timeout = 500000000;
+                    end
+                    default : begin
+                        next_state = NL;
+                        timeout = 500000000;
+                    end
                 endcase
             end
             
             EL_wait:begin
                 next_state = W;
+                timeout = 500000000;
             end
             
             W:begin
                 if (state_in == present_state)
                     casex(switch_in) 
-                        4'b1xxx: next_state = W_wait;
-                        default: next_state = W;
+                        4'b1xxx : begin
+                            next_state = W_wait;
+                            timeout = 500000000;
+                        end
+                        default : begin
+                            next_state = W;
+                            timeout = 500000000;
+                        end
                     endcase
             end
             
             W_wait:begin
                 next_state = NL;
+                timeout = 500000000;
             end
             
         endcase
@@ -104,64 +134,68 @@ module ringA(
     
     //Output Logic
     always @(posedge en) begin
-        state_out = present_state;
-        case(present_state)
-            NL:begin
-                NL_LED = 3'b001;
-                S_LED = 3'b100;
-                EL_LED = 3'b100;
-                W_LED = 3'b100;
-            end
+        timer<=timer+1;
+        if (timer >= timeout) begin
+            timer <= 0;
+            state_out = present_state;
+            case(present_state)
+                NL:begin
+                    NL_LED = ~3'b001;
+                    S_LED = ~3'b100;
+                    EL_LED = ~3'b100;
+                    W_LED = ~3'b100;
+                end
+                
+                NL_wait:begin
+                    NL_LED = ~3'b010;
+                    S_LED = ~3'b100;
+                    EL_LED = ~3'b100;
+                    W_LED = ~3'b100;
+                end
+                
+                S:begin
+                    NL_LED = ~3'b100;
+                    S_LED = ~3'b001;
+                    EL_LED = ~3'b100;
+                    W_LED = ~3'b100; 
+                end
+                
+                S_wait:begin
+                    NL_LED = ~3'b100;
+                    S_LED = ~3'b010;
+                    EL_LED = ~3'b100;
+                    W_LED = ~3'b100;
+                end
             
-            NL_wait:begin
-                NL_LED = 3'b010;
-                S_LED = 3'b100;
-                EL_LED = 3'b100;
-                W_LED = 3'b100;
-            end
-            
-            S:begin
-                NL_LED = 3'b100;
-                S_LED = 3'b001;
-                EL_LED = 3'b100;
-                W_LED = 3'b100; 
-            end
-            
-            S_wait:begin
-                NL_LED = 3'b100;
-                S_LED = 3'b010;
-                EL_LED = 3'b100;
-                W_LED = 3'b100;
-            end
-        
-            EL:begin
-                NL_LED = 3'b100;
-                S_LED = 3'b100;
-                EL_LED = 3'b001;
-                W_LED = 3'b100;
-            end
-            
-            EL_wait:begin
-                NL_LED = 3'b100;
-                S_LED = 3'b100;
-                EL_LED = 3'b010;
-                W_LED = 3'b100;
-            end
-            
-            W:begin
-                NL_LED = 3'b100;
-                S_LED = 3'b100;
-                EL_LED = 3'b100;
-                W_LED = 3'b001;
-            end
-            
-            W_wait:begin
-                NL_LED = 3'b100;
-                S_LED = 3'b100;
-                EL_LED = 3'b100;
-                W_LED = 3'b010;
-            end
-        endcase
+                EL:begin
+                    NL_LED = ~3'b100;
+                    S_LED = ~3'b100;
+                    EL_LED = ~3'b001;
+                    W_LED = ~3'b100;
+                end
+                
+                EL_wait:begin
+                    NL_LED = ~3'b100;
+                    S_LED = ~3'b100;
+                    EL_LED = ~3'b010;
+                    W_LED = ~3'b100;
+                end
+                
+                W:begin
+                    NL_LED = ~3'b100;
+                    S_LED = ~3'b100;
+                    EL_LED = ~3'b100;
+                    W_LED = ~3'b001;
+                end
+                
+                W_wait:begin
+                    NL_LED = ~3'b100;
+                    S_LED = ~3'b100;
+                    EL_LED = ~3'b100;
+                    W_LED = ~3'b010;
+                end
+            endcase
+       end
     end
     
 endmodule

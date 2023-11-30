@@ -37,11 +37,9 @@ module top(
 
     wire [2:0] ringA_state;
     wire [2:0] ringB_state;
-    reg en;
-    integer timer = 0;
 
     ringA A (
-        .en(en),
+        .en(clk),
         .rst(rst),
         .switch_in(switchA),
         .state_in(ringB_state),
@@ -53,7 +51,7 @@ module top(
     );
 
     ringB B (
-        .en(en),
+        .en(clk),
         .rst(rst),
         .switch_in(switchB),
         .state_in(ringA_state),
@@ -64,14 +62,5 @@ module top(
         .E_LED(E_LED)
     );
     
-    always @(posedge clk) begin
-        if (timer >= 100) begin
-            en = 1'b1;
-            timer = 0;
-        end else begin
-            en = 1'b0;
-            timer = timer + 1;
-        end
-    end
     
 endmodule
