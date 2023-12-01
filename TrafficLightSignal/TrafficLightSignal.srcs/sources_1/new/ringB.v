@@ -25,7 +25,7 @@ module ringB(
         input rst,
         input [3:0] switch_in, //South-Left Turn, North Lane, West-Left, East Lane
         input [2:0] state_in,
-        output reg [2:0] state_out,
+        output reg all_red_flag,
         output reg [2:0] SL_LED, N_LED, WL_LED, E_LED
     );
     
