@@ -1,0 +1,6 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/archive/4waytrafficlightsignal/Hybrid/FixedSequenceTrafficLightStateMachine.sim/sim_1/impl/timing/xsim/traffictb_time_impl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module top
+INFO: [VRFC 10-311] analyzing module traffic
+INFO: [VRFC 10-311] analyzing module glbl
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/archive/4waytrafficlightsignal/Hybrid/FixedSequenceTrafficLightStateMachine.srcs/sim_1/new/traffictb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module traffictb

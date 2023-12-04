@@ -43,13 +43,13 @@ module traffic(
         input clk,
         input rst,
         input [7:0] sensor, //[1 2 3 4 5 6 7 8]
-        input stop,
         output reg [2:0] N_out, E_out, S_out, W_out, NL_out, EL_out, SL_out, WL_out,
         output reg [5:0] state_out
     );
     
     reg [5:0] present_state, next_state;
     integer timer = 0;
+    integer delay = 100000000;
     
     
     localparam S2G_6G = 6'b000000;
@@ -105,14 +105,13 @@ module traffic(
     
  
     //Reset and next state control
-    always @(posedge clk, posedge rst, posedge stop) begin
+    always @(posedge clk, posedge rst) begin
         timer <= timer + 1;
-        
-        if (rst == 1'b1 || stop == 1'b1) begin
-            present_state = AR;
+        if (rst == 1'b1) begin
             timer <= 0;
+            present_state = AR;
         end else begin
-            if (timer >= 100000000) begin
+            if (timer >= delay) begin
                 timer <= 0;
                 present_state = next_state;
                 state_out = present_state;
@@ -121,9 +120,8 @@ module traffic(
     end
     
     //Prepares the next state
-    always @(present_state) begin
+    always @(present_state, sensor) begin
         case(present_state)
-            
             S4G_7R : next_state = S4G_8G;
             S4G_8Y : next_state = S4G_8R;
             S3R_8G : next_state = S4G_8G;
@@ -169,7 +167,7 @@ module traffic(
                 casex(sensor)
                 
                     // 1-6 1-5
-                    8'b10000000: begin
+                    8'b1xxxxxxx: begin
                         casex(sensor)
                             8'bxxxxx10x : next_state = S1G_5G;
                             default: next_state = S1G_6G;
@@ -177,7 +175,7 @@ module traffic(
                     end
                 
                     //2-5 2-6
-                    8'b01000000 : begin
+                    8'bx1xxxxxx : begin
                         casex(sensor)
                             8'bxxxxx10x : next_state = S2G_5G;
                             default: next_state = S2G_6G;
@@ -185,7 +183,7 @@ module traffic(
                     end
                     
                     // 3-8 3-7 
-                    8'b00100000 : begin
+                    8'bxx1xxxxx : begin
                         casex(sensor)
                             8'bxxxxxx10 : next_state = S3G_7G;
                             default: next_state = S3G_8G;
@@ -193,7 +191,7 @@ module traffic(
                     end
                     
                     //4-7 4-8
-                    8'b00010000 : begin
+                    8'bxxx1xxxx : begin
                         casex(sensor)
                             8'bxxxxxx10 : next_state = S4G_7G;
                             default: next_state = S4G_8G;
@@ -201,7 +199,7 @@ module traffic(
                     end
                     
                     // 1-5 2-5
-                    8'b00001000: begin
+                    8'bxxxx1xxx: begin
                         casex(sensor)
                             8'b10xxxxxx : next_state = S1G_5G;
                             default: next_state = S2G_5G;
@@ -209,7 +207,7 @@ module traffic(
                     end
                 
                     // 1-6 2-6
-                    8'b00000100 : begin
+                    8'bxxxxx1xx : begin
                         casex(sensor)
                             8'b10xxxxxx : next_state = S1G_6G;
                             default: next_state = S2G_6G;
@@ -217,7 +215,7 @@ module traffic(
                     end
                     
                     // 3-7 4-7 
-                    8'b00000010: begin
+                    8'bxxxxxx1x: begin
                         casex(sensor)
                             8'bxx10xxxx : next_state = S3G_7G;
                             default: next_state = S4G_7G;
@@ -225,7 +223,7 @@ module traffic(
                     end
                     
                     // 3-8 4-8
-                    8'b00000001: begin
+                    8'bxxxxxxx1: begin
                         casex(sensor)
                             8'bxx10xxxx : next_state = S3G_8G;
                             default: next_state = S4G_8G;
@@ -312,625 +310,258 @@ module traffic(
             case(present_state)
                            
                 AR : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
+                    N_out <= 3'b011;
+                    E_out <= 3'b011;
+                    S_out <= 3'b011;
+                    W_out <= 3'b011; 
+                    NL_out <= 3'b011; 
+                    EL_out <= 3'b011; 
+                    SL_out <= 3'b011; 
+                    WL_out <= 3'b011;
                 end
                 
                 S2G_6G : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    S_out = 3'b110;
-                    EL_out = 3'b110;
+                    S_out <= 3'b110;
+                    EL_out <= 3'b110;
                 end
                 
                 S2G_5G : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    S_out = 3'b110;
-                    SL_out = 3'b110;
+                    S_out <= 3'b110;
+                    SL_out <= 3'b110;
                 end
                 
                 S1G_5G : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    NL_out = 3'b110;
-                    SL_out = 3'b110;
+                    NL_out <= 3'b110;
+                    SL_out <= 3'b110;
                 end
                 
                 S1G_6G : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    NL_out = 3'b110;
-                    N_out = 3'b110;
+                    NL_out <= 3'b110;
+                    N_out <= 3'b110;
                 end
                 
                 
                 S4G_8G : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    E_out = 3'b110;
-                    W_out = 3'b110;
+                    E_out <= 3'b110;
+                    W_out <= 3'b110;
                 end
                 
                 S4G_7G : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    E_out = 3'b110;
-                    EL_out = 3'b110;
+                    E_out <= 3'b110;
+                    EL_out <= 3'b110;
                 end
                 
                 S3G_7G : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    WL_out = 3'b110;
-                    EL_out = 3'b110;
+                    WL_out <= 3'b110;
+                    EL_out <= 3'b110;
                 end
                 
                 S3G_8G : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    WL_out = 3'b110;
-                    W_out = 3'b110;
+                    WL_out <= 3'b110;
+                    W_out <= 3'b110;
                 end
     
                 S4G_7R :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    E_out = 3'b110;
-                    EL_out = 3'b011;
+                    E_out <= 3'b110;
+                    EL_out <= 3'b011;
                 end
                 
                 S4G_8Y : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    E_out = 3'b110;
-                    W_out = 3'b101;
+                    E_out <= 3'b110;
+                    W_out <= 3'b101;
                 end
                 
                 S3R_8G : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    WL_out = 3'b011;
-                    W_out = 3'b110;
+                    WL_out <= 3'b011;
+                    W_out <= 3'b110;
                 end
                 
                 S4Y_8G : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    E_out = 3'b101;
-                    W_out = 3'b110;
+                    E_out <= 3'b101;
+                    W_out <= 3'b110;
                 end
                 
                 S4G_7Y :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    E_out = 3'b110;
-                    EL_out = 3'b101;
+                    E_out <= 3'b110;
+                    EL_out <= 3'b101;
                 end
                 
                 S4G_8R : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    E_out = 3'b110;
-                    W_out = 3'b110;
+                    E_out <= 3'b110;
+                    W_out <= 3'b110;
                 end
                 
                 S3Y_8G :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    WL_out = 3'b101;
-                    W_out = 3'b110;
+                    WL_out <= 3'b101;
+                    W_out <= 3'b110;
                 end
                 
                 S4R_8G : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    E_out = 3'b011;
-                    W_out = 3'b110;
+                    E_out <= 3'b011;
+                    W_out <= 3'b110;
                 end
                 
                 S4Y_7G :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    E_out = 3'b101;
-                    EL_out = 3'b110;
+                    E_out <= 3'b101;
+                    EL_out <= 3'b110;
                 end
                 
                 S3G_7R : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    WL_out = 3'b110;
-                    EL_out = 3'b011;
+                    WL_out <= 3'b110;
+                    EL_out <= 3'b011;
                 end
                 
                 S3R_7G :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    WL_out = 3'b011;
-                    EL_out = 3'b110;
+                    WL_out <= 3'b011;
+                    EL_out <= 3'b110;
                 end
                 
                 S3Y_7G :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    WL_out = 3'b101;
-                    EL_out = 3'b110;
+                    WL_out <= 3'b101;
+                    EL_out <= 3'b110;
                 end
                 
                 S3G_8R : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    WL_out = 3'b110;
-                    W_out = 3'b011;
+                    WL_out <= 3'b110;
+                    W_out <= 3'b011;
                 end
                 
                 S3G_8Y : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    WL_out = 3'b011;
-                    W_out = 3'b101;
+                    WL_out <= 3'b011;
+                    W_out <= 3'b101;
                 end
                 
                 S3G_7Y :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    WL_out = 3'b110;
-                    EL_out = 3'b101;
+                    WL_out <= 3'b110;
+                    EL_out <= 3'b101;
                 end
                 
                 S2G_5R :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    S_out = 3'b110;
-                    SL_out = 3'b011;
+                    S_out <= 3'b110;
+                    SL_out <= 3'b011;
                 end
                 
                 S2G_6Y :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    S_out = 3'b110;
-                    N_out = 3'b101;
+                    S_out <= 3'b110;
+                    N_out <= 3'b101;
                 end
                 
                 /////
                 S1R_6G :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    NL_out = 3'b011;
-                    N_out = 3'b110;
+                    NL_out <= 3'b011;
+                    N_out <= 3'b110;
                 end
                 
                 S2Y_6G :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    S_out = 3'b101;
-                    N_out = 3'b110;
+                    S_out <= 3'b101;
+                    N_out <= 3'b110;
                 end
                 
                 S2G_5Y : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    S_out = 3'b110;
-                    SL_out = 3'b101;
+                    S_out <= 3'b110;
+                    SL_out <= 3'b101;
                 end
                 
-                S2G_6R :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    S_out = 3'b110;
-                    N_out = 3'b011;
+                S2G_6R :  begin;
+                    S_out <= 3'b110;
+                    N_out <= 3'b011;
                 end
                 
                 S1Y_6G :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    NL_out = 3'b101;
-                    N_out = 3'b110;
+                    NL_out <= 3'b101;
+                    N_out <= 3'b110;
                 end
                 
                 S2R_6G : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    S_out = 3'b011;
-                    N_out = 3'b110;
+                    S_out <= 3'b011;
+                    N_out <= 3'b110;
                 end
                 
                 S2Y_5G :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    S_out = 3'b101;
-                    SL_out = 3'b110;
+                    S_out <= 3'b101;
+                    SL_out <= 3'b110;
                 end
                 
-                S1G_5R :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    NL_out = 3'b110;
-                    SL_out = 3'b011;
+                S1G_5R :  begin;
+                    NL_out <= 3'b110;
+                    SL_out <= 3'b011;
                 end
                 
                 S1R_5G :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    NL_out = 3'b011;
-                    SL_out = 3'b110;
+                    NL_out <= 3'b011;
+                    SL_out <= 3'b110;
                 end
                 
                 S1Y_5G :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    NL_out = 3'b101;
-                    SL_out = 3'b110;
+                    NL_out <= 3'b101;
+                    SL_out <= 3'b110;
                 end
                 
                 S1G_6R :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    NL_out = 3'b110;
-                    N_out = 3'b011;
+                    NL_out <= 3'b110;
+                    N_out <= 3'b011;
                 end
                 
                 S1G_6Y : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    NL_out = 3'b110;
-                    N_out = 3'b101;
+                    NL_out <= 3'b110;
+                    N_out <= 3'b101;
                 end
                 
                 S1G_5Y :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    NL_out = 3'b110;
-                    SL_out = 3'b101;
+                    NL_out <= 3'b110;
+                    SL_out <= 3'b101;
                 end
                 
                 S3Y_7Y :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    WL_out = 3'b101;
-                    EL_out = 3'b101;
+                    WL_out <= 3'b101;
+                    EL_out <= 3'b101;
                 end
                 
                 S4Y_7Y : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    E_out = 3'b101;
-                    EL_out = 3'b101;
+                    E_out <= 3'b101;
+                    EL_out <= 3'b101;
                 end
                 
                 S3Y_8Y : begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    WL_out = 3'b101;
-                    W_out = 3'b101;
+                    WL_out <= 3'b101;
+                    W_out <= 3'b101;
                 end
                 
                 S4Y_8Y :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    E_out = 3'b101;
-                    W_out = 3'b101;
+                    E_out <= 3'b101;
+                    W_out <= 3'b101;
                 end
                 
                 S1Y_5Y :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    NL_out = 3'b101;
-                    SL_out = 3'b101;
+                    NL_out <= 3'b101;
+                    SL_out <= 3'b101;
                 end
                 
                 S2Y_5Y :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    S_out = 3'b101;
-                    SL_out = 3'b101;
+                    S_out <= 3'b101;
+                    SL_out <= 3'b101;
                 end
                 
                 S1Y_6Y :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    NL_out = 3'b101;
-                    N_out = 3'b101;
+                    NL_out <= 3'b101;
+                    N_out <= 3'b101;
                 end
                 
                 S2Y_6Y :  begin
-                    N_out = 3'b011;
-                    E_out = 3'b011;
-                    S_out = 3'b011;
-                    W_out = 3'b011; 
-                    NL_out = 3'b011; 
-                    EL_out = 3'b011; 
-                    SL_out = 3'b011; 
-                    WL_out = 3'b011;
-                    NL_out = 3'b101;
-                    N_out = 3'b101;
+                    NL_out <= 3'b101;
+                    N_out <= 3'b101;
                 end
                 
                 S4R_7G : begin
-                    E_out = 3'b011;
-                    EL_out = 3'b110;
+                    E_out <= 3'b011;
+                    EL_out <= 3'b110;
                 end
                 
                 S2R_5G :  begin
-                    S_out = 3'b011;
-                    SL_out = 3'b110;
+                    S_out <= 3'b011;
+                    SL_out <= 3'b110;
                 end
+               
 
             endcase
     end

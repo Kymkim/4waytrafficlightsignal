@@ -33,7 +33,8 @@ module top(
     output [2:0] W_LED,
     output [2:0] WL_LED,
     output [5:0] state_out
-);
+    );
+
 
     traffic A (
         .clk(clk),
@@ -49,5 +50,8 @@ module top(
         .WL_out(WL_LED),
         .state_out(state_out)
     );
+    
+
+
     
 endmodule

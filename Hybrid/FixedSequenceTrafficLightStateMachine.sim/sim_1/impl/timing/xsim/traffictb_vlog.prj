@@ -1,0 +1,7 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"traffictb_time_impl.v" \
+"../../../../../FixedSequenceTrafficLightStateMachine.srcs/sim_1/new/traffictb.v" \
+
+# Do not sort compile order
+nosort
