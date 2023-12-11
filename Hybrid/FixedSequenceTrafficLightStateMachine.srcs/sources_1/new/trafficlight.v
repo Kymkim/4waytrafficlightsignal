@@ -49,7 +49,7 @@ module traffic(
     
     reg [5:0] present_state, next_state;
     integer timer = 0;
-    integer delay = 100000000;
+    integer delay = 1000000000;
     
     
     localparam S2G_6G = 6'b000000;

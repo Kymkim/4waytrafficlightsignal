@@ -8,7 +8,9 @@ module traffic_tb;
     wire [2:0] N_out, E_out, S_out, W_out, NL_out, EL_out, SL_out, WL_out;
     wire [5:0] state_out;
     
-        localparam S2G_6G = 6'b000000;
+    integer seed = 58903;
+    
+    localparam S2G_6G = 6'b000000;
     localparam S2G_5R = 6'b000001;
     localparam S2G_6Y = 6'b000010;
     localparam S2Y_6Y = 6'b000011;
@@ -85,7 +87,7 @@ module traffic_tb;
         
         repeat(100) begin
             #10 
-            sensor = $random;
+            sensor = $random(seed);
             clk = ~clk;
             case(state_out)      
                     AR : if (N_out != 3'b011 || E_out != 3'b011 || S_out != 3'b011 || W_out != 3'b011 || NL_out != 3'b011 || EL_out != 3'b011 || SL_out != 3'b011 || WL_out != 3'b011) $fatal("Error Found!");    

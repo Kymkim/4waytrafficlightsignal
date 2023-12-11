@@ -3,6 +3,6 @@
 May  7 2023
 15:24:31
 C:/archive/4waytrafficlightsignal/Hybrid/FixedSequenceTrafficLightStateMachine.sim/sim_1/behav/xsim/glbl.v,1683266558,verilog,,,,glbl,,,,,,,,
-C:/archive/4waytrafficlightsignal/Hybrid/FixedSequenceTrafficLightStateMachine.srcs/sim_1/new/traffictb.v,1701657373,verilog,,,,traffic_tb,,,,,,,,
+C:/archive/4waytrafficlightsignal/Hybrid/FixedSequenceTrafficLightStateMachine.srcs/sim_1/new/traffictb.v,1701704787,verilog,,,,traffic_tb,,,,,,,,
 C:/archive/4waytrafficlightsignal/Hybrid/FixedSequenceTrafficLightStateMachine.srcs/sources_1/new/top.v,1701642308,verilog,,C:/archive/4waytrafficlightsignal/Hybrid/FixedSequenceTrafficLightStateMachine.srcs/sources_1/new/trafficlight.v,,top,,,,,,,,
-C:/archive/4waytrafficlightsignal/Hybrid/FixedSequenceTrafficLightStateMachine.srcs/sources_1/new/trafficlight.v,1701657342,verilog,,C:/archive/4waytrafficlightsignal/Hybrid/FixedSequenceTrafficLightStateMachine.srcs/sim_1/new/traffictb.v,,traffic,,,,,,,,
+C:/archive/4waytrafficlightsignal/Hybrid/FixedSequenceTrafficLightStateMachine.srcs/sources_1/new/trafficlight.v,1701703885,verilog,,C:/archive/4waytrafficlightsignal/Hybrid/FixedSequenceTrafficLightStateMachine.srcs/sim_1/new/traffictb.v,,traffic,,,,,,,,
